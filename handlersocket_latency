@@ -24,7 +24,7 @@ my ($start_sec, $start_microseconds) = gettimeofday();
 sub calc_latency_millisecond{
     my ($start_sec, $start_microseconds) = @_;
     my ($end_sec, $end_microseconds) = gettimeofday();
-    return (($end_sec - $start_sec) * 1000000 + $end_microseconds - $start_microseconds) / 1000;
+    return (($end_sec - $start_sec) * 1000000 + $end_microseconds - $start_microseconds) / 1000 / 1000;
 }
 
 # Connection
@@ -49,10 +49,8 @@ if (@$execute_res == 2 && $execute_res->[1] eq $OPTIONS{'value'}) {
 # Print
 if ( $mode eq 'config' ) {
     print "graph_title HandlerSocket Read latency\n";
+    print "graph_vlabel Response time\n";
     print "graph_category mysql\n";
-    print "graph_args -r --lower-limit 0\n";
-    print "millisecond.label millisecond\n";
-    print "millisecond.draw LINE2\n";
-    print "millisecond.min 0\n";
+    print "latency.label Response time\n";
 }
-print "millisecond.value $latency_millisecond\n";
+print "latency.value $latency_millisecond\n";
