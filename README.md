@@ -14,7 +14,7 @@ Set plugin.
 # chmod 775 /etc/munin/plugins/handlersocket_latency
 ```
 
-Edit config file.
+Edit config file.  
 You can edit config values via https://github.com/takeshiyako2/munin-handlersocket_latency/blob/master/handlersocket_latency#L12-L20
 ```
 # vi /etc/munin/plugin-conf.d/munin-node
