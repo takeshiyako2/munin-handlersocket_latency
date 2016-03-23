@@ -8,22 +8,28 @@ This is munin plugin for HandlerSocket. This plugin checks read latency.
 
 Set plugin.
 ```
-git clone git@github.com:takeshiyako2/munin-handlersocket_latency.git
-cp munin-handlersocket_latency/handlersocket_latency /usr/share/munin/plugins/
-ln -s /usr/share/munin/plugins/handlersocket_latency /etc/munin/plugins/handlersocket_latency
-chmod 775 /etc/munin/plugins/handlersocket_latency
+# git clone git@github.com:takeshiyako2/munin-handlersocket_latency.git
+# cp munin-handlersocket_latency/handlersocket_latency /usr/share/munin/plugins/
+# ln -s /usr/share/munin/plugins/handlersocket_latency /etc/munin/plugins/handlersocket_latency
+# chmod 775 /etc/munin/plugins/handlersocket_latency
 ```
 
 Edit config file.
 ```
-vi /etc/munin/plugin-conf.d/munin-node
+# vi /etc/munin/plugin-conf.d/munin-node
 [handlersocket_*]
 env.host 100.100.100.100
 ```
 
+Test run.
+```
+# munin-run handlersocket_latency
+millisecond.value 4.814
+```
+
 Re-start munin-node.
 ```
-service munin-node restart
+# service munin-node restart
 ```
 
 # Link
