@@ -1,0 +1,58 @@
+#!/usr/bin/perl
+use strict;
+use warnings FATAL => 'all';
+use Net::HandlerSocket;
+use Time::HiRes qw(gettimeofday tv_interval ualarm);
+use lib $ENV{'MUNIN_LIBDIR'};
+use Munin::Plugin;
+
+# munin settings
+my $mode = ($ARGV[0] or "print");
+
+# Options
+my %OPTIONS;
+$OPTIONS{'database'} = exists $ENV{database}  ? $ENV{database} : 'mysql';
+$OPTIONS{'host'} = exists $ENV{host}  ? $ENV{host} : 'localhost';
+$OPTIONS{'table'} = exists $ENV{table}  ? $ENV{table} : 'user';
+$OPTIONS{'index'} = exists $ENV{index}  ? $ENV{index} : 'PRIMARY';
+$OPTIONS{'columns'} = exists $ENV{columns}  ? $ENV{columns} : 'Host';
+$OPTIONS{'port'} = exists $ENV{port}  ? $ENV{port} : '9998';
+$OPTIONS{'value'} = exists $ENV{value}  ? $ENV{value} : 'localhost';
+
+# Calc latency (microseconds)
+my ($start_sec, $start_microseconds) = gettimeofday();
+sub calc_latency_millisecond{
+    my ($start_sec, $start_microseconds) = @_;
+    my ($end_sec, $end_microseconds) = gettimeofday();
+    return (($end_sec - $start_sec) * 1000000 + $end_microseconds - $start_microseconds) / 1000;
+}
+
+# Connection
+my $args = { host => $OPTIONS{'host'}, port => $OPTIONS{'port'} };
+my $hs = new Net::HandlerSocket($args);
+my $res = $hs->open_index(0, $OPTIONS{'database'}, $OPTIONS{'table'},$OPTIONS{'index'}, $OPTIONS{'columns'});
+if ($hs->get_error() ne 'open_table' && $hs->get_error) {
+    print 'connection error -> ' . $hs->get_error();
+    die;
+}
+
+# Checks
+my $latency_millisecond;
+my $execute_res = $hs->execute_single(0, '=', [ "$OPTIONS{'value'}" ], 1, 0);
+if (@$execute_res == 2 && $execute_res->[1] eq $OPTIONS{'value'}) {
+    $latency_millisecond = calc_latency_millisecond($start_sec, $start_microseconds);
+} else {
+    print 'execute error';
+    die;
+}
+
+# Print
+if ( $mode eq 'config' ) {
+    print "graph_title HandlerSocket Read latency\n";
+    print "graph_category mysql\n";
+    print "graph_args -r --lower-limit 0\n";
+    print "millisecond.label millisecond\n";
+    print "millisecond.draw LINE2\n";
+    print "millisecond.min 0\n";
+}
+print "millisecond.value $latency_millisecond\n";
