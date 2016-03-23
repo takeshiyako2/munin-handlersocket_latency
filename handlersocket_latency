@@ -21,7 +21,7 @@ $OPTIONS{'value'} = exists $ENV{value}  ? $ENV{value} : 'localhost';
 
 # Calc latency (microseconds)
 my ($start_sec, $start_microseconds) = gettimeofday();
-sub calc_latency_millisecond{
+sub calc_latency{
     my ($start_sec, $start_microseconds) = @_;
     my ($end_sec, $end_microseconds) = gettimeofday();
     return (($end_sec - $start_sec) * 1000000 + $end_microseconds - $start_microseconds) / 1000 / 1000;
@@ -37,10 +37,10 @@ if ($hs->get_error() ne 'open_table' && $hs->get_error) {
 }
 
 # Checks
-my $latency_millisecond;
+my $latency;
 my $execute_res = $hs->execute_single(0, '=', [ "$OPTIONS{'value'}" ], 1, 0);
 if (@$execute_res == 2 && $execute_res->[1] eq $OPTIONS{'value'}) {
-    $latency_millisecond = calc_latency_millisecond($start_sec, $start_microseconds);
+    $latency = calc_latency($start_sec, $start_microseconds);
 } else {
     print 'execute error';
     die;
