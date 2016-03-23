@@ -51,6 +51,9 @@ if ( $mode eq 'config' ) {
     print "graph_title HandlerSocket latency\n";
     print "graph_vlabel Response time\n";
     print "graph_category mysql\n";
-    print "latency.label Response time\n";
+    print "graph_args -r --lower-limit 0\n";
+    print "latency.label latency\n";
+    print "latency.draw LINE2\n";
+    print "latency.min 0\n";
 }
-print "latency.value $latency_millisecond\n";
+print "latency.value $latency\n";
