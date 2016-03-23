@@ -4,7 +4,7 @@ This is munin plugin for HandlerSocket. This plugin checks read latency.
 
 
 
-# How to use
+# Usage
 
 Set plugin.
 ```
