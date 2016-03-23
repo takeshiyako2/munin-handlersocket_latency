@@ -48,7 +48,7 @@ if (@$execute_res == 2 && $execute_res->[1] eq $OPTIONS{'value'}) {
 
 # Print
 if ( $mode eq 'config' ) {
-    print "graph_title HandlerSocket Read latency\n";
+    print "graph_title HandlerSocket latency\n";
     print "graph_vlabel Response time\n";
     print "graph_category mysql\n";
     print "latency.label Response time\n";
