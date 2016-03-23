@@ -1,6 +1,6 @@
 # munin-handlersocket_latency
 
-This is a munin plugin for HandlerSocket. This plugin checks read latency.
+This is a munin plugin for HandlerSocket. This plugin checks read response time.
 
 
 
